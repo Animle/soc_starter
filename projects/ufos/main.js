@@ -1,7 +1,7 @@
 game_config = {
   title: "UFO Invasion",
   backgroundImage: "city.png",
-  update: enemyStateMachine
+  update: enemyStateMachine,
 }
 game = new Game(game_config)
 
@@ -22,7 +22,7 @@ player = new PlayerSprite(player_config)
 game.add(player)
 
 enemies = []
-for (i = 0; i < 3; i++){
+for (i = 0; i < 5; i++){
   item_config = {
     imageChoices: ["ufo.png"],
     location: randomStartLocation,
@@ -58,15 +58,15 @@ function playerColisionHandler(src, target) {
    }
 }
 function randomStartLocation(){
-  azlan = random(0,canvas.width - 10)
+  randX = random(0,canvas.width - 10)
   randY = 0
-  return new Vector(azlan, randY)
+  return new Vector(randX, randY)
 }
 function projectileColisionHandler(src, target) {
   if   (target instanceof EnemySprite) {
     score = score + 10
     game.remove(src)
-      game.remove(target)
+    target.respawn()
   }
 }
 
@@ -87,26 +87,26 @@ function startRetreatState(ufo) {
 
 }
 
+
 function enemyStateMachine() {
   for (i = 0; i < enemies.length; i++) {
     enemy = enemies[i]
 
-    if (random(1, 100) <= 1) {
-      // what is the current
+    // Cange state with 1% probability
+    if (random(1, 100) <= 1){
+      //what is the current state
       if (enemy.state == "STANDBY") {
-        // attack 50%
+        // attack 50% of the time
         if (random(1, 100) <= 50) {
-          startAttackState(enemy)
-
+            startAttackState(enemy)
         } else {
           startRetreatState(enemy)
         }
       }
       else if (enemy.state == "RETREAT") {
-        // attack
+        // attack 50% of the time
         if (random(1, 100) <= 50) {
-          startAttackState(enemy)
-
+            startAttackState(enemy)
         } else {
           startStandbyState(enemy)
         }
