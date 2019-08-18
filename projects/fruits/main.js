@@ -1,9 +1,10 @@
+fruits = []
 game_config = {
   title: "Fruit bowl",
   backgroundImage: "orchard.png",
   update: myGameLogic,
 }
-game= new Game(game_config)
+game = new Game(game_config)
 
 player_config = {
   image: "bowl.png",
@@ -14,10 +15,9 @@ player_config = {
 player = new PlayerSprite(player_config)
 game.add(player)
 
-fruits= []
-for (i = 0; i < 5; i++){
-item_config = {
-    imageChoices: ["apple.png", "peach.png", "plum.png","pineapple.png","bananas.png"],
+for (i = 0; i < 5; i++) {
+  item_config = {
+    imageChoices: ["apple.png", "peach.png", "plum.png", "pineapple.png", "bananas.png"],
     move: true,
     direction: DOWN,
     location: randomStartLocation,
@@ -54,14 +54,14 @@ function playerCollisonHandler(src, target) {
 function randomStartLocation() {
   randX = random(10, canvas.width - 10)
   randY = 0
-return new Vector(randX, randY)
+  return new Vector(randX, randY)
 }
 
 function myGameLogic() {
-  for (i = 0; i < fruits.length; i++){
+  for (i = 0; i < fruits.length; i++) {
     fruit = fruits[i]
     rect = fruit.getBoundingRect()
-    if(rect.centerY > canvas.height) {
+    if (rect.centerY > canvas.height) {
       fruit.respawn()
     }
   }

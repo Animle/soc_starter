@@ -1,3 +1,30 @@
+bad_guesses = ["Missed letters"]
+current_guess = "Current Guess"
+current_msg = "Current Msg"
+game_over = false
+choose_game = false
+player_image_idx = 0
+player_images = ["empty.png", "head.png", "body.png", "one_arm.png", "two_arms.png", "one_leg.png", "two_legs.png"]
+
+current_puzzle = ""
+puzzles = [
+  "sushi",
+  "eating",
+  "sleeping",
+  "earth",
+  "animals",
+  "cake stinks",
+  "games",
+  "hangman",
+  "video game programming",
+  "droids will be droids",
+  "naruto",
+  "lakeland florida",
+  "ice pops",
+  "game over",
+  "ha ha ha ha",
+]
+
 game_config = {
   title: "Hangman",
   backgroundColor: "black",
@@ -30,7 +57,7 @@ game.add(gallows)
 
 bad_guess_config = {
   text: "${bad_guesses}",
-  location: new Vector(canvas.width/2, 12),
+  location: new Vector(canvas.width / 2, 12),
   align: ALIGN_CENTER,
   valign: VALIGN_TOP,
   color: "red",
@@ -41,7 +68,7 @@ game.add(bad_guess)
 
 puzzle_config = {
   text: "${current_guess}",
-  location: new Vector(canvas.width/2, canvas.height - 12),
+  location: new Vector(canvas.width / 2, canvas.height - 12),
   align: ALIGN_CENTER,
   valign: VALIGN_BOTTOM,
   color: "white",
@@ -60,32 +87,6 @@ msg_config = {
 msg = new TextSprite(msg_config)
 game.add(msg)
 canvas.style.letterSpacing = "6px"
-bad_guesses = ["Missed letters"]
-current_guess = "Current Guess"
-current_msg = "Current Msg"
-game_over = false
-choose_game = false
-player_image_idx = 0
-player_images = ["empty.png", "head.png", "body.png", "one_arm.png", "two_arms.png", "one_leg.png", "two_legs.png"]
-
-current_puzzle = ""
-puzzles = [
-  "sushi",
-  "eating",
-  "sleeping",
-  "earth",
-  "animals",
-  "cake stinks",
-  "games",
-  "hangman",
-  "video game programming",
-  "droids will be droids",
-  "naruto",
-  "lakeland florida",
-  "ice pops",
-  "game over",
-  "ha ha ha ha",
-]
 
 game.start()
 startNewGame()
@@ -163,10 +164,9 @@ function guess(letter) {
 function userInput(key) {
   if (game_over == true) {
     if (key == KEY_ENTER) {
-    startNewGame()
+      startNewGame()
     }
-  }
-  else if (choose_game == true) {
+  } else if (choose_game == true) {
     if (key == KEY_ENTER) {
       newPuzzle()
     } else if (key == KEY_P) {
@@ -175,83 +175,57 @@ function userInput(key) {
         setPuzzle(val)
       }
     }
-  }
-  else if (key == KEY_A){
+  } else if (key == KEY_A) {
     guess("A")
-  }
-  else if (key == KEY_B){
+  } else if (key == KEY_B) {
     guess("B")
-  }
-  else if (key == KEY_C){
+  } else if (key == KEY_C) {
     guess("C")
-  }
-  else if (key == KEY_D){
+  } else if (key == KEY_D) {
     guess("D")
-  }
-  else if (key == KEY_E){
+  } else if (key == KEY_E) {
     guess("E")
-  }
-  else if (key == KEY_F){
+  } else if (key == KEY_F) {
     guess("F")
-  }
-  else if (key == KEY_G){
+  } else if (key == KEY_G) {
     guess("G")
-  }
-  else if (key == KEY_H){
+  } else if (key == KEY_H) {
     guess("H")
-  }
-  else if (key == KEY_I){
+  } else if (key == KEY_I) {
     guess("I")
-  }
-  else if (key == KEY_J){
+  } else if (key == KEY_J) {
     guess("J")
-  }
-else if (key == KEY_K){
-  guess("K")
-}
-else if (key == KEY_L){
-  guess("L")
-}
-else if (key == KEY_M){
-  guess("M")
-}
-else if (key == KEY_N){
-  guess("N")
-}
-else if (key == KEY_O){
-  guess("O")
-}
-else if (key == KEY_P){
-  guess("P")
-}
-else if (key == KEY_Q){
-  guess("Q")
-}
-else if (key == KEY_R){
-  guess("R")
-}
-else if (key == KEY_S){
-  guess("S")
-}
-else if (key == KEY_T){
-  guess("T")
-}
-else if (key == KEY_U){
-  guess("U")
-}
-else if (key == KEY_V){
-  guess("V")
-}
-else if (key == KEY_W){
-  guess("W")
-}
-else if (key == KEY_X){
-  guess("X")
-}
-else if (key == KEY_Y){
-  guess("Y")
-}
-  else if (key == KEY_Z) {
+  } else if (key == KEY_K) {
+    guess("K")
+  } else if (key == KEY_L) {
+    guess("L")
+  } else if (key == KEY_M) {
+    guess("M")
+  } else if (key == KEY_N) {
+    guess("N")
+  } else if (key == KEY_O) {
+    guess("O")
+  } else if (key == KEY_P) {
+    guess("P")
+  } else if (key == KEY_Q) {
+    guess("Q")
+  } else if (key == KEY_R) {
+    guess("R")
+  } else if (key == KEY_S) {
+    guess("S")
+  } else if (key == KEY_T) {
+    guess("T")
+  } else if (key == KEY_U) {
+    guess("U")
+  } else if (key == KEY_V) {
+    guess("V")
+  } else if (key == KEY_W) {
+    guess("W")
+  } else if (key == KEY_X) {
+    guess("X")
+  } else if (key == KEY_Y) {
+    guess("Y")
+  } else if (key == KEY_Z) {
     guess("Z")
   }
 }

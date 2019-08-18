@@ -1,74 +1,109 @@
- game_config = {
-  title: "Meteor Shower",
-  backgroundImage: "space.png",
-}
-game= new Game(game_config)
-  projectile_config = {
-    image: "missile.png",
-    direction: UP,
-    collisionHandler:projectileCollisionHandler,
-  }
+//=========================================================================
+// GLOBALS
+// ========================================================================
+var num_meteors = 3
+var score = 0
+var status_msg = ""
 
-
-
-player_config = {
-  image: "ufo.png",
-  edges: WARP,
-  collisionHandler: playerCollisonHandler,
-  projectile: projectile_config,
-}
-player = new PlayerSprite(player_config)
-game.add(player)
-for (i = 0; i < 10; i++){
-item_config = {
-    imageChoices: ["meteor1.png", "meteor2.png", "meteor3.png",],
-    move: true,
-    direction: createNormalizedRandomVector,
-    location: randomStartLocation,
-    edges: WARP,
-    rotateSpeed: randomRotateSpeed,
-  }
-  item = new EnemySprite(item_config)
-  game.add(item)
-}
-
-text_config = {
-  text: "Score: ${score}",
-  location: TOP_CENTER,
-  color: "white",
-  bold: true,}
-text = new TextSprite(text_config)
-game.add(text)
-
-score = 0
-game.start()
-
-//================================================================================
-// custom Functions
-//================================================================================
-function playerCollisonHandler(src, target) {
-  if (target instanceof EnemySprite){
-    game.remove(src)
-    src.respawn()
-  }
-}
-  function projectileCollisionHandler(src, target){
-    if (target instanceof EnemySprite){
-      score = score + 10
-      game.remove(src)
-      //game.respawn(target)
-      target.respawn()
+//=========================================================================
+// CUSTOM GAME OBJECTS
+// ========================================================================
+class SpaceShipSprite extends PlayerSprite {
+  move(direction) {
+    if (direction == LEFT) {
+      this.direction.rotate(-5)
+      this.angle = this.direction.getAngleInDegrees() + 90
+    } else if (direction == RIGHT) {
+      this.direction.rotate(5)
+      this.angle = this.direction.getAngleInDegrees() + 90
     }
+
+    if (direction == UP) {
+      super.move(UP)
+    } else if (direction == DOWN) {
+      super.move(DOWN)
+    }
+  }
 }
+
+//=========================================================================
+// GAME OBJECTS
+// ========================================================================
+var gc = new Config()
+gc.title = "Meteor Shower"
+gc.backgroundimage = "space.png"
+var game = new Game(gc)
+
+var bc = new Config("bullet config")
+bc.image = "missile.png"
+bc.direction = UP
+
+var pc = new Config("player config")
+pc.image = "spaceship.png"
+pc.projectile = bc
+pc.edges = WARP
+pc.direction = UP
+var player = new SpaceShipSprite(pc)
+game.add(player)
+
+var stc = new Config("score text config")
+stc.text = "Score: ${score}"
+stc.location = TOP_CENTER
+stc.color = "white"
+stc.bold = true
+var score_text = new TextSprite(stc)
+game.add(score_text)
+
+var stmc = new Config()
+stmc.text = "${status_msg}"
+stmc.location = MIDDLE_CENTER
+stmc.color = "white"
+stmc.bold = true
+stmc.size = 42
+var ststus_msg_text = new TextSprite(stmc)
+game.add(ststus_msg_text)
+
+var hmc = new Config()
+hmc.location = new Vector(2, 2)
+var health_meter = new StatusBarSprite(hmc)
+game.add(health_meter)
+
+for (i = 0; i < num_meteors; i++) {
+  var mc = new Config("meteor config")
+  mc.imageChoices = new List("meteor1.png", "meteor2.png", "meteor3.png")
+  mc.location = randomStartLocation
+  mc.rotateSpeed = randomRotateSpeed
+  mc.direction = createNormalizedRandomVector
+  mc.edges = WARP
+  mc.move = true
+  mc.collisionHandler = impact
+  var meteor = new EnemySprite(mc)
+  game.add(meteor)
+}
+
+//=========================================================================
+// CUSTOM FUNCTIONS
+// ========================================================================
+function impact(meteor, other_sprite) {
+  if (other_sprite instanceof PlayerSprite) {
+    health_meter.value = health_meter.value - 25
+    meteor.respawn()
+    if (health_meter.value <= 0) {
+      game.remove(other_sprite)
+      status_msg = "Game Over"
+    }
+  } else if (other_sprite instanceof BulletSprite) {
+    score = score + 10
+    game.remove(other_sprite)
+    meteor.respawn()
+  }
+}
+
 function randomStartLocation() {
   randX = random(10, canvas.width - 10)
   randY = 0
-return new Vector(randX, randY)
+  return new Vector(randX, randY)
 }
-
-
-
-
 
 function randomRotateSpeed() {
   return random(1, 100)
