@@ -1,119 +1,42 @@
-game_config = {
-  title: "UFO Invasion",
-  backgroundImage: "city.png",
-  update: enemyStateMachine
-}
-game = new Game(game_config)
+var gc = new Config()
+gc.title = "Snack Attack"
+gc.backgroundimage = "grass.png"
+var game = new Game(gc)
 
-projectile_config = {
-  image: "canonball.png",
-  direction: UP,
-  collisionHandler: projectileColisionHandler,
-}
-
-player_config = {
-  edges: CLAMP,
-  collisionHandler: playerColisionHandler,
-  image: "tank.png",
-  location: BOTTOM_CENTER,
-  projectile: projectile_config,
-}
-player = new PlayerSprite(player_config)
+var pc = new Config()
+pc.edges = WARP
+pc.collisionHandler = playerCollisionHandler
+pc.image = "turtle.png"
+var player = new PlayerSprite(pc)
 game.add(player)
 
-enemies = []
-for (i = 0; i < 3; i++){
-  item_config = {
-    imageChoices: ["ufo.png"],
-    location: randomStartLocation,
-    move: true,
-    direction: DOWN,
-    edges: BOUNCE,
+var sc = new Config()
+sc.imageChoices = new List("grapes.png", "carrot.png", "bananas.png", "apple.png", "pineapple.png", "broccoli.png", "lemon.png")
+sc.respawnTime = 4
+var snack = new PowerUpSprite(sc)
+game.add(snack)
+
+var jc = new Config()
+jc.imageChoices = new List("cupcake.png", "cookie.png", "cake.png")
+jc.respawnTime = 2
+var junk = new EnemySprite(jc)
+game.add(junk)
+
+function playerCollisionHandler(player, food) {
+  if (food instanceof PowerUpSprite) {
+    food.respawn()
+    player.r = player.r + 5
+    if (player.r >= 200) {
+      console.log("game over you win")
+      game.paused = true
+    }
   }
-  item = new EnemySprite(item_config)
-  game.add(item)
-  startStandbyState(item)
-  enemies.push(item)
-}
-
-text_config = {
-  text: "Score: ${score}",
-  location: TOP_CENTER,
-  color: "white",
-  bold: true,
-}
-text = new TextSprite(text_config)
-game.add(text)
-
-score = 0
-game.start()
-
-
-
-
-function playerColisionHandler(src, target) {
-
-  if (target instanceof EnemySprite){
-    game.remove(src)
-   }
-}
-function randomStartLocation(){
-  azlan = random(0,canvas.width - 10)
-  randY = 0
-  return new Vector(azlan, randY)
-}
-function projectileColisionHandler(src, target) {
-  if   (target instanceof EnemySprite) {
-    score = score + 10
-    game.remove(src)
-      game.remove(target)
-  }
-}
-
-function startStandbyState(ufo) {
-  ufo.state = "STANDBY"
-  dir = randomChoice([LEFT,RIGHT])
-ufo.changeDirection(dir)
-}
-
-function startAttackState(ufo) {
-  ufo.state = "ATTACK"
-    dir = randomChoice([DOWN_LEFT,DOWN_RIGHT])
-  ufo.changeDirection(dir)
-}
-function startRetreatState(ufo) {
-  ufo.state = "RETREAT"
-  ufo.changeDirection(UP)
-
-}
-
-function enemyStateMachine() {
-  for (i = 0; i < enemies.length; i++) {
-    enemy = enemies[i]
-
-    if (random(1, 100) <= 1) {
-      // what is the current
-      if (enemy.state == "STANDBY") {
-        // attack 50%
-        if (random(1, 100) <= 50) {
-          startAttackState(enemy)
-
-        } else {
-          startRetreatState(enemy)
-        }
-      }
-      else if (enemy.state == "RETREAT") {
-        // attack
-        if (random(1, 100) <= 50) {
-          startAttackState(enemy)
-
-        } else {
-          startStandbyState(enemy)
-        }
-      }
-      else if (enemy.state == "ATTACK") {
-        startRetreatState(enemy)
-      }
+  if (food instanceof EnemySprite) {
+    food.respawn()
+    player.r = player.r - 10
+    if (player.r < 10) {
+      console.log("game over you lose")
+      game.paused = true
     }
   }
 }

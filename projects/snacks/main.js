@@ -1,43 +1,42 @@
-game_config = {
-  title: "Snack Attack",
-  backgroundImage: "grass.png",
-}
-game= new Game(game_config)
+var gc = new Config()
+gc.title = "Snack Attack"
+gc.backgroundimage = "grass.png"
+var game = new Game(gc)
 
-player_config = {
-  image: "turtle.png",
-  edges: WARP,
-  collisionHandler: playerCollisonHandler,
-}
-player = new PlayerSprite(player_config)
+var pc = new Config()
+pc.edges = WARP
+pc.collisionHandler = playerCollisionHandler
+pc.image = "turtle.png"
+var player = new PlayerSprite(pc)
 game.add(player)
 
-for (i = 0; i < 3; i++){
-  item_config = {
-    imageChoices: ["broccoli.png", "carrot.png", "tomato.png",],
+var sc = new Config()
+sc.imageChoices = new List("grapes.png", "carrot.png", "bananas.png", "apple.png", "pineapple.png", "broccoli.png", "lemon.png")
+sc.respawnTime = 4
+var snack = new PowerUpSprite(sc)
+game.add(snack)
+
+var jc = new Config()
+jc.imageChoices = new List("cupcake.png", "cookie.png", "cake.png")
+jc.respawnTime = 2
+var junk = new EnemySprite(jc)
+game.add(junk)
+
+function playerCollisionHandler(player, food) {
+  if (food instanceof PowerUpSprite) {
+    food.respawn()
+    player.r = player.r + 5
+    if (player.r >= 200) {
+      console.log("game over you win")
+      game.paused = true
+    }
   }
-  item = new PowerUpSprite(item_config)
-  game.add(item)
-}
-
-text_config = {
-  text: "Score: ${score}",
-  location: TOP_CENTER,
-  color: "black",
-  bold: true,
-}
-text = new TextSprite(text_config)
-game.add(text)
-
-score = 0
-game.start()
-
-//================================================================================
-// custom Functions
-//================================================================================
-function playerCollisonHandler(src, target) {
-  if (target instanceof PowerUpSprite) {
-    score = score + 10
-    target.respawn()
+  if (food instanceof EnemySprite) {
+    food.respawn()
+    player.r = player.r - 10
+    if (player.r < 10) {
+      console.log("game over you lose")
+      game.paused = true
+    }
   }
 }

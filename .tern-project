@@ -1,0 +1,15 @@
+{
+  "ecmaVersion": 8,
+  "libs": [],
+  "loadEagerly": [
+    "lib/*.js",
+    "lib/helpers/*.js",
+    "lib/simplegameengine/*.js"
+  ],
+  "dontLoad": [
+    "node_modules/**"
+  ],
+  "plugins": {
+    "doc_comment": true
+  }
+}
